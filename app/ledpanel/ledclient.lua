@@ -54,5 +54,7 @@ function get_motd(serial)
     end)
 end
 
+-- SVCD.write("fe80::212:6d02:0:304d", 0x3003, 0x4005, "goats", 300);
+
 cord.enter_loop()
 
