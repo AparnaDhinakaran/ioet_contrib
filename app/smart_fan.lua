@@ -1,7 +1,6 @@
 require "cord"
 require "storm" 
 
-print ("Button test ")
 function onconnect(state)
    if tmrhandle ~= nil then
        storm.os.cancel(tmrhandle)
@@ -15,27 +14,43 @@ function onconnect(state)
    end
 end
 
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D11)
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D10)
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D9)
+storm.io.set_mode(storm.io.OUTPUT,  storm.io.D4)
+storm.io.set_mode(storm.io.OUTPUT,  storm.io.D3)
+storm.io.set_mode(storm.io.OUTPUT,  storm.io.D2)
 
 function fanControl(state)
-	storm.io.set(0, storm.io.D11)
-	storm.io.set(0, storm.io.D10)
-	storm.io.set(0, storm.io.D9)
+	storm.io.set(0, storm.io.D4)
+	storm.io.set(0, storm.io.D3)
+	storm.io.set(0, storm.io.D2)
 	if state == "low" then 
-		storm.io.set(1, storm.io.D9)
+		storm.io.set(1, storm.io.D2)
+        print("turning on d2")
 	end
 	if state == "med" then 
-		storm.io.set(1, storm.io.D10)
+		storm.io.set(1, storm.io.D3)
+        print("turning on d3")
 	end
 	if state == "high" then 
-		storm.io.set(1, storm.io.D11)
+		storm.io.set(1, storm.io.D4)
+        print("turning on d4")
 	end 	
 end 
-	
-	
-fanControl("high")
+
+counter=0
+storm.os.invokePeriodically(2*storm.os.SECOND,function()
+    print(counter%4)
+    if counter%4==0 then
+    elseif counter%4==1 then
+        fanControl("low")
+    elseif counter%4==2 then
+        fanControl("med")
+    else
+        fanControl("high")
+    end	
+end)
+
+
+
 storm.bl.enable("unused", onconnect, function()
    local svc_handle = storm.bl.addservice(0x1337)
    char_handle = storm.bl.addcharacteristic(svc_handle, 0x1338, function(x)
