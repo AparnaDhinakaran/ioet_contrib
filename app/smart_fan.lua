@@ -1,5 +1,7 @@
 require "cord"
+require "storm" 
 
+print ("Button test ")
 
 function onconnect(state)
    if tmrhandle ~= nil then
@@ -22,4 +24,5 @@ storm.bl.enable("unused", onconnect, function()
    end)
 end)
 
+print ("End")
 cord.enter_loop()
