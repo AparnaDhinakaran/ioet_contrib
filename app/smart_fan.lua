@@ -15,11 +15,11 @@ function onconnect(state)
    end
 end
 
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D11)
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D10)
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D9)
-
 function fanControl(state)
+	storm.io.set_mode(storm.io.OUTPUT,  storm.io.D11)
+	storm.io.set_mode(storm.io.OUTPUT,  storm.io.D10)
+	storm.io.set_mode(storm.io.OUTPUT,  storm.io.D9)
+
 	storm.io.set(0, storm.io.D11)
 	storm.io.set(0, storm.io.D10)
 	storm.io.set(0, storm.io.D9)
@@ -36,6 +36,7 @@ end
 	
 	
 fanControl("high")
+
 storm.bl.enable("unused", onconnect, function()
    local svc_handle = storm.bl.addservice(0x1337)
    char_handle = storm.bl.addcharacteristic(svc_handle, 0x1338, function(x)
@@ -43,6 +44,12 @@ storm.bl.enable("unused", onconnect, function()
    end)
 end)
 
+storm.bl.enable("unused", fanControl, function()
+   local svc_handle = storm.bl.addservice(0x1345)
+   char_handle = storm.bl.addcharacteristic(svc_handle, 0x1345, function(x)
+	print ("recieved: ",x)
+   end)
+end)
 
 -- set buttons as outputs
 -- storm.io.set_mode(storm.io.OUTPUT,  storm.io.D11)
