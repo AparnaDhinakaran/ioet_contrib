@@ -14,14 +14,15 @@ function onconnect(state)
    end
 end
 
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D4)
-storm.io.set_mode(storm.io.OUTPUT,  storm.io.D3)
 storm.io.set_mode(storm.io.OUTPUT,  storm.io.D2)
+storm.io.set_mode(storm.io.OUTPUT,  storm.io.D3)
+storm.io.set_mode(storm.io.OUTPUT,  storm.io.D4)
 
 function fanControl(state)
-	storm.io.set(0, storm.io.D4)
-	storm.io.set(0, storm.io.D3)
-	storm.io.set(0, storm.io.D2)
+    storm.io.set(0, storm.io.D2)
+    storm.io.set(0, storm.io.D3)
+    storm.io.set(0, storm.io.D4)
+
 	if state == "low" then 
 		storm.io.set(1, storm.io.D2)
         print("turning on d2")
@@ -38,8 +39,10 @@ end
 
 counter=0
 storm.os.invokePeriodically(2*storm.os.SECOND,function()
+    counter=counter+1
     print(counter%4)
     if counter%4==0 then
+        fanControl("off")
     elseif counter%4==1 then
         fanControl("low")
     elseif counter%4==2 then
@@ -56,8 +59,13 @@ storm.bl.enable("unused", onconnect, function()
    char_handle = storm.bl.addcharacteristic(svc_handle, 0x1338, function(x)
        print ("received: ",x)
    end)
-end)
 
+   local svc_handle = storm.bl.addservice(0x1345)
+   char_handle = storm.bl.addcharacteristic(svc_handle, 0x1345, function(x)
+	print ("recieved: ",x)
+
+   end)
+end)
 
 -- set buttons as outputs
 -- storm.io.set_mode(storm.io.OUTPUT,  storm.io.D11)
