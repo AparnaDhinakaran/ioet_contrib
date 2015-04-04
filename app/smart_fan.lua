@@ -18,25 +18,37 @@ storm.io.set_mode(storm.io.OUTPUT,  storm.io.D2)
 storm.io.set_mode(storm.io.OUTPUT,  storm.io.D3)
 storm.io.set_mode(storm.io.OUTPUT,  storm.io.D4)
 
+smap_sock = storm.net.udpsocket(50000, function(payload, from, port) print("got something") end)
+
 function fanControl(state)
     storm.io.set(0, storm.io.D2)
     storm.io.set(0, storm.io.D3)
     storm.io.set(0, storm.io.D4)
-
-	if state == "low" then 
+		fan_mode = 0
+	if state == "low" then
+		fan_mode = 1 
 		storm.io.set(1, storm.io.D2)
         print("turning on d2")
 	end
 	if state == "med" then 
+		fan_mode = 2
 		storm.io.set(1, storm.io.D3)
         print("turning on d3")
 	end
 	if state == "high" then 
+		fan_mode = 3
 		storm.io.set(1, storm.io.D4)
         print("turning on d4")
-	end 	
+	end
+
+	local smap_msg = {
+		UUID = "0a5a7f3e-5d9b-4c7b-85c9-5678f06d6c13"
+		Readings = {storm.os.now(storm.os.SHIFT_0), fan_mode}
+	}
+	storm.net.sendto(smap_sock, tostring(fan_mode), "fe80::201:c0ff:fe15:841ls", 9114)
 end 
 
+fanControl("off")
 counter=0
 storm.os.invokePeriodically(2*storm.os.SECOND,function()
     counter=counter+1
