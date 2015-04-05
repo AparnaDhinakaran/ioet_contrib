@@ -41,11 +41,11 @@ function fanControl(state)
         print("turning on d4")
 	end
 
-	local smap_msg = {
-		UUID = "0a5a7f3e-5d9b-4c7b-85c9-5678f06d6c13"
-		Readings = {storm.os.now(storm.os.SHIFT_0), fan_mode}
-	}
-	storm.net.sendto(smap_sock, tostring(fan_mode), "fe80::201:c0ff:fe15:841ls", 9114)
+--	local smap_msg = {
+--		UUID = "0a5a7f3e-5d9b-4c7b-85c9-5678f06d6c13"
+--		Readings = {storm.os.now(storm.os.SHIFT_0), fan_mode}
+--	}
+	storm.net.sendto(smap_sock, tostring(fan_mode), "fe80::201:c0ff:fe15:8419", 9114)
 end 
 
 fanControl("off")
