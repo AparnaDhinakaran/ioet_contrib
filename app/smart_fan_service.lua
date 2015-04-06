@@ -25,12 +25,12 @@ function fanControl(state)
 	end 	
 end 
 
-SVCD.init(0x3008,function() 
+SVCD.init("Smart Fan",function() 
     print("this has been init") 
     SVCD.add_service(0x3009)
     SVCD.add_attribute(0x3009, 0x4012, function(pay, src_ip,src_port)
         print "setting fan speed"
-        fancontrol("low")
+        fanControl("low")
     end)
 end)
 
